@@ -1,3 +1,4 @@
+// Directly grab and hacked from glfw's offscreen function just for test at this moment
 //========================================================================
 // Offscreen rendering example
 // Copyright (c) Camilla Löwy <elmindreda@glfw.org>
@@ -38,6 +39,7 @@
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
+#include <fstream>
 
 static const struct
 {
@@ -83,7 +85,7 @@ int main(void)
     float ratio;
     int width, height;
     mat4x4 mvp;
-    char* buffer;
+    unsigned char* buffer;
 
     glfwSetErrorCallback(error_callback);
 
@@ -151,9 +153,24 @@ int main(void)
 #if USE_NATIVE_OSMESA
     glfwGetOSMesaColorBuffer(window, &width, &height, NULL, (void**) &buffer);
 #else
-    buffer = (char*)calloc(4, width * height);
+    buffer = (unsigned char*)calloc(4, width * height);
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 #endif
+
+    // Output raw data for test purpose
+    std::ofstream of("test.txt");
+
+    for(int i = 0;i  < width; ++i) {
+        for(int j = 0;j < height; ++j) {
+            of << "||||";
+            of << (int)(buffer[(i*height + j)*4 + 0]);
+            for(int k = 1;k < 4; ++k){
+                of << ",";
+                of << (int)(buffer[(i*height + j)*4 + k]);
+            }
+        }
+    }
+    of.close();
 
     // Write image Y-flipped because OpenGL
     stbi_write_png("offscreen.png",

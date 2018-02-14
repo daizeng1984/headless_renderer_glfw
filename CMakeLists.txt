@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_STANDARD 11)
 project(headless_renderer)
-SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++")
+SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11")
 SET(CMAKE_BUILD_TYPE Debug)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -15,8 +15,9 @@ include_directories(external/glfw)
 include_directories(external/glfw/deps)
 include_directories(external/glfw/include)
 
-add_subdirectory(external/glm)
+# header only add_subdirectory(external/glm)
 include_directories(external/glm)
+include_directories(external/CLI11/include)
 
 add_subdirectory(external/assimp)
 include_directories(external/assimp)
